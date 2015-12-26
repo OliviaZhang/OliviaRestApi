@@ -1,5 +1,12 @@
 var Author = require('./models/author');
 
+function saveToDb(obj) {
+	obj.save(function(err) {
+		if (err) throw err;
+		console.log("Saved successfully!");
+	});
+
+}
 module.exports = function(app) {
 	var express = require('express');
 
@@ -12,15 +19,15 @@ module.exports = function(app) {
 	              { author : 'Neale Donald Walsch', text : "You are afraid to die, and you're afraid to live. What a way to exist."}
 	            ];
 
-	app.get('/quote', function(req, res) {
+	router.get('/quote', function(req, res) {
 		res.json(quotes);
 	});
 
-	app.get('/quote/:id', function(req, res) {
+	router.get('/quote/:id', function(req, res) {
 		res.json(quotes[req.params.id]);
 	});
 
-	app.post('/quote', function(req, res) {	
+	router.post('/quote', function(req, res) {	
 		if (!req.body.hasOwnProperty('author') || !req.body.hasOwnProperty('text')) {
 			res.statusCode = 400;
 			return res.send('Error: wrong format of post');
@@ -39,10 +46,9 @@ module.exports = function(app) {
 			text: req.body.text
 		});
 
-		olivia.save(function(err) {
-			if (err) throw err;
-			console.log("Saved successfully!");
-		});
+		saveToDb(olivia);
 	});
+	
+	app.use('/author', router);
 
 };
