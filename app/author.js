@@ -1,11 +1,5 @@
 var Author = require('./models/author');
-
-function saveToDb(obj) {
-	obj.save(function(err) {
-		if (err) throw err;
-		console.log("Saved successfully!");
-	});
-}
+var dbUtils = require('../utils-module').Db;
 
 module.exports = function(app) {
     var express = require('express');
@@ -45,7 +39,7 @@ module.exports = function(app) {
     		text: req.body.text
     	});
 
-    	saveToDb(olivia);
+    	dbUtils.saveToDb(olivia);
     });
 
     app.use('/author', router);
